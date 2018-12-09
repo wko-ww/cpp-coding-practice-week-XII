@@ -1,1 +1,2133 @@
-备用
+//8.1
+#include"pch.h"
+#include<iostream>
+#include<string.h>
+#include<iomanip>
+using namespace std;
+
+struct student2
+{
+	int num;
+	char name[20];
+	float score[4];
+};
+
+struct studenta1 //student_a1 invalid?
+{
+	int num;
+	char name[20];
+	float score;
+};
+
+studenta1 Input()
+{
+	studenta1 stud;
+	cout << "输入学号、姓名和成绩:";
+	cin >> stud.num >> stud.name >> stud.score;
+	return stud;
+}
+
+void Input1(studenta1 &stud)
+{
+	cout << "输入学号、姓名和成绩:";
+	cin >> stud.num >> stud.name >> stud.score;
+}
+
+void Output(studenta1 stud)
+{
+	cout << setw(10) << stud.num << setw(20) << stud.name << setw(10) << stud.score << endl;
+}
+
+int main(void)
+{
+	//8.1 结构体的定义及应用
+	//8.1.1 结构体类型的定义
+	struct student
+	{
+		int num;
+		char name[20];
+		char sex;
+		int age;
+		float score;
+	};
+
+	//8.1.2 结构体类型变量的定义
+	//结构体类型是抽象的，其中并没有具体的数据。系统对它也不分配实际内存单元
+	//1. 先定义结构体类型再定义变量
+	struct student stud1, stud2;
+	student stud3, stud4;
+	//结构体变量所占空间大小是所有成员所占空间大小的和
+
+	//2. 在定义结构体类型的同时定义变量
+	struct student1
+	{
+		int num;
+		char name[20];
+		char sex;
+		int age;
+		float score;
+	}stud5, stud6;
+	
+	//注意定义变量的方式和全局，局部的关系
+
+	//3. 直接定义结构体类型变量
+	struct
+	{
+		int num;
+		char name[20];
+		char sex;
+		int age;
+		float score;
+	}static stud7, stud8; //两个都是static
+
+	static int a, b; //两个都是static
+
+	//建议使用第一种方法定义结构体类型的变量
+
+	//定义变量同时指定存储类型
+
+	static student stud9;
+	//auto student stud10; 这个编译系统不支持
+	//extern student stud11; 这个编译系统不支持
+
+	//定义同时可以初始化
+	student stud10 = { 23901, "李明", 'M', 19, 85 };
+
+	//8.1.3 结构体类型变量及其成员的引用
+	//1. 引用成员
+	stud1.num;
+	//赋值
+	stud1.num = 23901;
+	//"."是成员运算符
+	stud1.num++;
+	stud2.sex = stud10.sex;
+
+	//2.引用整体
+	//同类型结构体变量之间可以相互赋值。这种赋值等同于各个成员依次赋值
+	struct temptype
+	{
+		int i, j;
+		char name[20];
+	};
+	temptype t1 = { 12, 48, "LiLi" }, t2;
+	t2 = t1;
+
+	//t2 = t1 等同于
+	t2.i = t1.i;
+	t2.j = t1.j;
+	strcpy_s(t2.name, t1.name); //!!!!!!!!!!!!!!!!!!!!!
+
+	//不能将结构体变量作为一个整体输入输出 只能对结构体变量中的各个成员分别进行输入输出
+	// cout << stud1;  //invalid
+
+	//结构体变量可以作为函数的参数，也可以作为函数的返回值 也分传值调用和引用调用
+	void print(student2);
+	student2 stud21;
+	stud21.num = 2468;
+	strcpy_s(stud21.name, "LiWen"); //!!!!!!
+	stud21.score[0] = 68.5;
+	stud21.score[1] = 90;
+	stud21.score[2] = 78.5;
+	stud21.score[3] = 85.5;
+	print(stud21);
+
+	//成员类型可以是一个构造数据类型
+
+	struct date
+	{
+		int year, month, day;
+	};
+
+	struct student3
+	{
+		int num;
+		char name[20];
+		char sex;
+		date birthday;
+		char addr[40];
+	}stud31, stud32;
+	stud31.birthday.day;
+
+	//8.1.4 结构体数组
+	//定义结构体数组也有类似前面的三种方法
+	struct student_a
+	{
+		int num;
+		char name[20];
+		char sex;
+		int age;
+		float score;
+		char addr[30];
+	};
+	student_a student_a1[4] =
+	{ {23901, "Zang Li", 'F' ,19, 78.5, "35 Shanghai Road" },
+	{23902, "Wang Fang", 'F', 19, 92, "101 Taiping Road" },
+	{23905, "Zhao Qiang", 'M', 20, 87, "56 Ninghai Road" },
+	{23908, "Li Hai", 'M', 19, 95, "48 Jiankang Road" } };
+
+	student_a student_a2[4] =
+	{ 23901, "Zang Li", 'F' ,19, 78.5, "35 Shanghai Road",
+	23902, "Wang Fang", 'F', 19, 92, "101 Taiping Road",
+	23905, "Zhao Qiang", 'M', 20, 87, "56 Ninghai Road",
+	23908, "Li Hai", 'M', 19, 95, "48 Jiankang Road" };
+
+	struct student_a1
+	{
+		int num;
+		char name[20];
+		float score;
+	};
+
+	//数组例题
+	int i;
+	studenta1 student[3];
+	for (int i = 0; i < 3; i++)
+		student[i] = Input();
+	cout << setw(10) << "学号" << setw(20) << "姓名" << setw(10) << "成绩" << endl;
+	for (int i = 0; i < 3; i++)
+		Output(student[i]);
+	cout << endl;
+
+	int i1;
+	studenta1 student1[3];
+	for (int i1 = 0; i1 < 3; i1++)
+		Input1(student1[i1]);
+	cout << setw(10) << "学号" << setw(20) << "姓名" << setw(10) << "成绩" << endl;
+	for (int i1 = 0; i1 < 3; i1++)
+		Output(student1[i1]);
+	cout << endl;
+}
+
+void print(student2 stud)
+{
+	cout << "学号\t\t" << stud.num << '\n' << "姓名\t\t" << stud.name << '\n';
+	cout << "数学成绩\t" << stud.score[0] << '\n' << "英语成绩\t" << stud.score[1] << '\n';
+	cout << "程序设计成绩\t" << stud.score[2] << '\n' << "物理成绩\t" << stud.score[3] << endl;
+}
+
+//8.2
+#include"pch.h"
+#include<iostream>
+using namespace std;
+int main(void)
+{
+	//共用体 放在同一个地址开始的内存单元中 共占同一段内存
+	//定义
+	//1.
+	union data
+	{
+		short int i;
+		char c;
+		float f;
+	};
+	union data a, b, c;
+	data a1, b1, c1;
+
+	union data1
+	{
+		short int i;
+		char c;
+		float f;
+	}a2, b2, c2;
+
+	union
+	{
+		short int i;
+		char c;
+		float f;
+	}a3, b3, c3;
+
+	//共用体变量所占的内存长度是所有成员中最长的成员的长度
+
+	//引用
+	//1. 引用成员
+	a.i;
+	a.c;
+	a.f;
+
+	//2. 引用整体
+	//同类型共用体变量可以直接赋值
+	a.i = 2;
+	a.c = 'm';
+	a.f = 2;
+
+	a1 = a;
+
+	//不能把整个变量输入输出
+	//cout << a << endl;  invalid
+
+	//在某一时刻只能在同一个内存段存放其中一种而不是同时存放几种 也就是说，在一个时刻只有一个成员起作用
+	//起作用的是最后一次存放的成员
+	a.i = 10;
+	a.c = 'A';
+	a.f = 1.8;
+	//以上三个赋值执行后，只有a.f有效 cout << a.i; 可以运行，但是将a.f最低两字节解释为整数输出
+	//共用体变量起始地址和各个成员起始地址是同一地址
+	//如果在定义共用体变量时对它初始化，则只允许有一个数赋给第一个成员
+	union
+	{
+		int i;
+		char c;
+		float f;
+	}a4 = { 10 }; // a4 = {10, 'A', 1.8}invalid
+
+	union
+	{
+		int i;
+		char c[4];
+	}a5;
+	cout << "input an integer:\n";
+	cin >> a5.i;
+	cout << "the four bytes of the integer is:\n";
+	for (int k = 3; k >= 0; k--) //?????????
+		cout << (int)a5.c[k] << '\t';
+	cout << endl;
+}
+
+//8.3
+#include"pch.h"
+#include<iostream>
+#include<iomanip>
+using namespace std;
+
+enum color { red, yellow, blue, white, black, purple};
+
+void print(color c)
+{
+	switch (c)
+	{
+	case red: cout << setw(10) << "red"; break; //red 枚举常量 下同
+	case yellow: cout << setw(10) << "yellow"; break;
+	case blue: cout << setw(10) << "blue"; break;
+	case white: cout << setw(10) << "white"; break;
+	case black: cout << setw(10) << "black"; break;
+	case purple: cout << setw(10) << "purple"; break;
+	}
+}
+
+
+int main(void)
+{
+	//枚举
+	//限制变量取值范围
+
+	//枚举类型定义
+	enum day {Sun, Mon, Tue, Wed, Thur, Fri, Sat}; //每个枚举类型的枚举常量名不能相同
+	//每个枚举常量是一个用标识符表示的整型常量
+	//每个枚举常量默认情况下 第一个 0 第二个 1 后一个是前一个加一 
+	//枚举常量可定义时被显式赋值，被显式赋值的枚举常量将获得该值 没被赋值的按照后一个是前一个加一的规则分别获得值
+
+	enum day1 {Sun1 = 7, Mon1 = 1, Tue1, Wed1, Thur1, Fri1, Sat1};
+
+	//枚举类型变量定义
+	enum day day1, day2, day3;//三个变量的值应是枚举常量列表中规定的7个枚举常量之一
+
+	enum day2 {Sun2, Mon2, Tue2, Wed2, Thur2, Fri2, Sat2}day21, day22, day23;
+
+	//cin >> day1; invalid
+
+	int count = 0;
+	color i, j, k;
+	for (i = red; i <= purple; i = color(i + 1)) 
+		for (j = red; j <= purple; j = color(int(j) + 1))
+			if (i != j)
+				for (k = red; k <= purple; k = color(int(k) + 1))
+					if ((k != i) && (k != j))
+					{
+						cout << setw(10) << ++count;
+						print(i);
+						print(j);
+						print(k);
+						cout << endl;
+					}
+	cout << "可能的组合数为:" << count << endl;
+
+	//引用
+	color m;
+	m = red;
+	cout << m << endl;
+	cout << color(red) << endl;
+	cout << color(red + 9) << endl; //枚举常量+数字 输出他们的和
+	cout << color(9) << endl; //输出括号里整数
+
+	//m = 0; invalid 只能把枚举常量赋值给m
+}
+
+//9.1
+#include"pch.h"
+#include<iostream>
+using namespace std;
+
+int main(void)
+{
+	//变量的地址是指该变量所在储存区域的第一字节的地址 c++中，地址也称为指针
+
+	//指针变量的定义
+	//指针变量存放一个内存地址，即另一个变量在内存的储存位置
+	//指针是构造数据类型
+	int *pi; //int * 为整型指针的类型标识符 
+	float *pf;
+	char *pc;
+	//pi指向int型量，则称int是pi的基类型，同理，float是pf的基类型，char是pc的基类型
+
+	/*
+	c++语言规定编程者使用的有效指针不能指向内存0号单元，即编程者使用的有效指针值不能为0.
+	如果将指针变量值赋值为0，表示该指针是空指针，它是无效指针，不指向任何量
+	c++已预先定义符号常量NULL，其值为0，通常用它表示空指针值*/
+
+	//有关指针的运算符& *
+	//& 取地址运算符 功能：获取变量内存地址
+	int *p1, m;
+	m = 200;
+	p1 = &m;
+
+	cout << sizeof(p1) << endl; //4
+
+	char *p2, m2;
+	m2 = 'a';
+	p2 = &m2;
+
+	cout << sizeof(p2) << endl; //4
+
+	//* 间接访问运算符 功能：访问指针指向的变量
+	int *p3, m3 = 200, n3;
+	p3 = &m3; //&
+	n3 = *p3; //*
+	cout << n3 << endl;
+	*p3 = 100;
+	cout << m3 << endl;
+
+	//赋值
+	int a1, b1;
+	int *p4 = &a1, *p5;
+	p5 = &b1;
+
+	/*
+	直接访问：
+	在程序中使用变量名来存取变量的值称为变量的直接访问（也称为直接存取） 内部处理成：从变量属性表中查到该变量地址，存取该地址内存中的值
+
+	间接访问：
+	在程序中通过变量的指针来存取它所指向的变量的值称为间接访问（也称为间接存取） 内部处理成：先从变量属性表中查得指针变量的地址a，
+	从地址a的储存单元中取得该指针指向的变量b的地址b1，再访问地址b1中的内容
+
+	int *p, m;
+	p = &m;
+
+	*p 与 m 等价
+	p 与 &m 等价
+	*/
+
+	char c6 = 'A';
+	char *p6 = &c6;
+	cout << c6 << *p6 << ',';
+	c6 = 'B';
+	cout << c6 << *p6 << ',';
+	*p6 = 'a';
+	cout << c6 << *p6 << endl;
+
+	int a7 = 1, *p71;
+	float b7 = 5.2, *p72;
+	char c7 = 'A', *p73;
+
+	p71 = &a7;
+	p72 = &b7;
+	p73 = &c7;
+
+	cout << a7 << ',' << b7 << ',' << c7 << endl;
+	cout << *p71 << ',' << *p72 << ',' << *p73 << endl;
+
+	*p71 = *p71 + 1;
+	*p72 += 2;
+	*p73 += 3;
+	cout << a7 << ',' << b7 << ',' << c7 << endl;
+	
+	//同类型指针变量之间可以相互赋值，不同类型指针变量之间一般不行
+
+	//允许将一个整型常量经强制类型转换后赋给指针变量
+	float *fp1;
+	fp1 = (float *)5000;
+	//意义是将5000作为一个地址值赋给指针变量fp1
+
+	//交换两个指针的指向
+	int x8 = 10, y8 = 20;
+	int *p81 = &x8, *p82 = &y8, *t8;
+	cout << *p81 << ' ' << *p82 << endl;
+	t8 = p81; p81 = p82; p82 = t8;
+	cout << *p81 << ' ' << *p82 << endl;
+
+	//交换两个指针所指向的变量的值
+	int x9 = 10, y9 = 20;
+	int *p91 = &x9, *p92 = &y9, t9;
+	cout << *p91 << ',' << *p92 << endl;
+	t9 = *p91; *p91 = *p92; *p91 = t9;
+	cout << *p91 << ',' << *p92 << endl;
+
+	//地址值输出 默认输出16进制地址值
+	int a10, *p101;
+	float b10, *p102;
+	double c10, *p103;
+	p101 = &a10;
+	p102 = &b10;
+	p103 = &c10;
+	cout << "p101=" << p101 << endl;
+	cout << "p102=" << p102 << endl;
+	cout << "p103=" << p103 << endl;
+
+	//输出十进制
+	cout << "p101=" << int(p101) << endl; //将p101的值即地址值（其类型是int *）强制转换为int型输出
+	cout << "p102=" << (int)p102 << endl;
+	cout << "p103=" << (int)p103 << endl;
+	//int型数据默认输出十进制值
+}
+
+//9.2
+#include"pch.h"
+#include<iostream>
+using namespace std;
+
+void swap(int *px, int *py)
+{
+	int t;
+	t = *px; *px = *py; *py = t;
+}
+
+void lowterm(int *nump, int *denp)
+{
+	int n, d, r;
+	n = *nump;
+	d = *denp;
+	while (d != 0)
+	{
+		r = n % d; n = d; d = r;
+	}
+	if (n > 1)
+	{
+		*nump = *nump / n;
+		*denp = *denp / n;
+	}
+
+}
+
+
+int main(void)
+{
+	/*
+	指针作函数参数，本质上是传值调用，传递的是地址值。
+	但由于其特殊性，也把它作为参数传递方式的一种
+	函数调用参数传递方式分三种 传值调用 引用调用和传地址调用
+	*/
+
+	//传地址调用 指针作为函数参数，参数值本身是单向传递的 传的值是指针类型
+	int x = 3, y = 9, *p1, *p2;
+	p1 = &x; p2 = &y;
+	swap(p1, p2);
+	cout << x << ' ' << y << endl;
+
+	//约分
+	int a2 = 14, b2 = 21;
+	cout << a2 << '/' << b2 << endl;
+	lowterm(&a2, &b2);
+	cout << a2 << '/' << b2 << endl;
+}
+
+//9.3.1-9.3.2
+#include"pch.h"
+#include<iostream>
+using namespace std;
+
+void reverse(int b[], int n)
+{
+	int i = 0, j = n - 1, t;
+	while(i < j)
+	{
+		t = b[i]; b[i] = b[j]; b[j] = t;
+		i++, j--;
+	}
+}
+
+int fsum(int *array, int n)
+{
+	int i, s = 0;
+	for (int i = 0; i < n; i++)
+		s += array[i];
+	return s;
+}
+
+void max_min_value(int *array, int n, int *maxp, int *minp)
+{
+	int *p, *array_end;
+	array_end = array + n;
+	*maxp = *minp = *array;
+	for (p = array + 1; p < array_end; p++)
+	{
+		if (*p > *maxp) *maxp = *p;
+		else if (*p < *minp) *minp = *p;
+	}
+}
+
+void sorted(int *a, int n)
+{
+	int *p, *q, *maxp, t;
+	for (p = a; p < a + n - 1; p++)
+	{
+		maxp = p;
+		for (q = p + 1; q < a + n; q++)
+			if (*q > *maxp) maxp = q;
+		if (maxp != p)
+		{
+			t = *p; *p = *maxp; *maxp = t;
+		}
+	}
+}
+
+int main(void)
+{
+	/*数组名
+
+	数组名是数组储存区的起始地址 如int a[10]， a是该储存区的首地址，即a[0]元素的（第一个储存单元）地址，是地址常量，
+	其地址类型是int *
+	a与&a[0]等价
+
+	*/
+
+	//指向一维数组元素的指针变量
+	int a[10], *p;
+	p = &a[6];
+
+	p = &a[0];
+	p = a;
+
+	//指针加减正整型量
+	/*
+	p±n: 实际： p的值±n*sizeof（p基类型量）
+	p+n指向a[i]后面第n个元素（向高地址方向）
+	p-n指向a[i]前面第n个元素（向低地址方向）
+	*/
+	float a1[5], *p1 = &a1[0], *p2;
+	p2 = p1 + 3;
+
+	float a2[5], *p3 = &a2[3], *p4;
+	p4 = p3 - 2;
+
+	/*
+	指针加减，可实现通过一个数组起始指针访问数组中任一元素
+	若 int a[10], *p = a
+	访问数组第i个元素 *(p+i)或 *(a+i) p、a值相同，类型相同
+	a[i] c++内部处理：*(a+i)
+	如果写p[i] 同样处理成： *(p+i) 所以p[i]也是数组元素的合法访问方式 
+	若有上述前提 访问a[i]方式：
+	a[i] p[i] *(a+i) *(p+i)
+	第i个元素地址：
+	&a[i] &p[i] a+i p+i
+
+	p、a数据类型一样 都是*int型 但p是指针变量 a是指针常量 不能改变a的值 a++非法 p++合法
+	如有p = &a[2]
+	p[2]访问a[4]
+	*/
+
+	//求和
+	int a5[10] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }, *p5 = a5, sum5 = 0, i5;
+	for (i5 = 0; i5 < 10; i5++)
+		sum5 = sum5 + *(p5 + i5);
+	for (i5 = 0; i5 < 10; i5++, p5++) //指针变量可自加自减
+		cout << *p5 << '\t';
+	cout << endl << sum5 << endl;
+
+	//指针-指针
+	//指向相同数据类型的指针变量可以相减 结果为两个指针所指向地址之间的数据个数
+	int *px5, *py5, n5, a51[5];
+	px5 = &a51[1];
+	py5 = &a51[4];
+	n5 = py5 - px5; //n5=3
+	n5 = px5 - py5; //n5=-3
+	//数据个数=（py地址值-px地址值） / sizeof（类型说明符）
+
+	//比较 == != <= < > >= 直接比较类型值大小 如果相等，表示两个指针指向同一变量 比较产生结果为0或1
+	int a6[10] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+	p5 = a6, sum5 = 0;
+	for (p5 = a6; p5 < a6 + 10; p5++) //此循环结束后 p5指向a6[9]之后储存空间
+		sum5 = sum5 + *p5;
+	for (p5 = a6; p5 < a6 + 10; p5++)
+		cout << *p5 << '\t';
+	cout << endl << sum5 << endl;
+
+	//逆序存放
+	int a7[10] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }, t7;
+	int *p71 = a7, *p72 = a7 + 9;
+	while (p71 < p72)
+	{
+		t7 = *p71; *p71 = *p72; *p72 = t7;
+		p71++; p72--;
+	}
+	for (p71 = a7; p71 < a7 + 10; p71++)
+		cout << *p71 << '\t';
+	cout << endl;
+
+	//函数定义中 int b[]本质上是定义了一个指针变量 可改写成int *b
+	//数组名做参数 被调函数中修改形参指针变量b的值 实参a的值不受影响
+
+	//形参定义形式int b[] 在方括号中可以写任意整型常量 不影响b性质 编译器会忽略方括号中的量
+
+	//部分逆序
+	int a8[10] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+	reverse(a8 + 3, 6);
+	for (int i = 0; i < 10; i++)
+		cout << a8[i] << '\t';
+	cout << endl;
+
+	//前十个 后十个之和
+	int a9[15] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 ,15 };
+	int shead, stail;
+	shead = fsum(a9, 10);
+	stail = fsum(&a9[5], 10);
+	cout << shead << ',' << stail << endl;
+
+	//求最大最小
+	int number[10], *p8 = number, max, min;
+	for (int i = 0; i < 10; i++)
+		cin >> *(p8 + i); //*
+	max_min_value(p8, 10, &max, &min);
+	for (int i = 0; i < 10; i++)
+		cout << *(p8 + i) << '\t';
+	cout << endl;
+	cout << max << ' ' << min << endl;
+	
+	//选择法排降序
+	int a10[10];
+	for (int i = 0; i < 10; i++)
+		cin >> *(a10 + i);
+	sorted(a10, 10);
+	for (int i = 0; i < 10; i++)
+		cout << *(a10 + i) << '\t';
+	cout << endl;
+}
+
+//9.3.3
+#include"pch.h"
+#include<iostream>
+#include<string.h>
+using namespace std;
+
+int my_strlen(char *s)
+{
+	int n;
+	for (n = 0; *s != '\0'; s++)
+		n++;
+	return n;
+}
+
+int my_strcmp(char *s, char *t)
+{
+	for (; *s == *t; s++, t++)
+		if (*s == '\0') return 0;
+	return (*s - *t) > 0 ? 1 : -1;
+}
+
+void copy_string1(char to[], char from[])
+{
+	int i = 0;
+	while (from[i] != '\0')
+	{
+		to[i] = from[i];
+		i++;
+	}
+	to[i] = '\0'; //!!!
+}
+
+void copy_string2(char to[], char from[])
+{
+	int i = 0;
+	while ((to[i] = from[i]) != '\0') i++;
+}
+
+void copy_string3(char *to, char *from)
+{
+	while ((*to = *from) != '\0')
+	{
+		from++;
+		to++;
+	}
+}
+
+void copy_string4(char *to, char *from)
+{
+	while ((*to++ = *from++) != 0) ; //可以写成0代替'\0' 运算时字符型自动转换为整型
+}
+
+void copy_string5(char *to, char *from)
+{
+	while (*to++ = *from++) //from是指针 from++ to++表示指针移到下一个元素 加到第20个元素后，指针移到后面的储存空间 空间内储存的变量的值不一样
+	{
+		cout << int(*from) << endl;
+		cout << int(*to) << endl;
+	}
+}
+
+int main(void)
+{
+	//数组定义时只要对数组一个元素初始化了，则其余元素值均为0
+	//注意'\0'的整型值就是0
+	cout << int('\0') << endl;
+
+	//字符数组名可以代表储存在字符数组中的字符串
+
+	//定义一个字符串指针并令其指向一个字符串
+	/*
+	char *strp1 = "Hello!"  这个语句在vc++不合法？
+	c++将"Hello!"的值处理成该储存区的地址。所以，上述语句的含义是将字符串"Hello!"
+	的首地址赋给指针变量strp，本质上strp指向字符串的第一个字符'H',
+	上述语句等价于
+	char *strp1; strp1 = "Hello!";
+
+	str1是指针常量，无论是否对字符串赋值，字符数组空间已分配
+	*/
+
+	/*c++在处理字符串时，将从字符串起始地址开始到结尾标志'\0'的全部内容作为字符串整体看待
+	c++提供的所有字符串处理函数的参数都是字符指针 
+	也可以说字符指针代表了一个以该指针为起始地址，直到'\0'为止的一个字符串*/
+	char str1[10] = "Hello!";
+	cout << strlen(str1 + 2) << ',';
+	strcpy_s(str1 + 2, 5, "ABCD"); //用指针而不是数组名 有三个参数
+	cout << str1 << endl;
+	/*strlen 从地址str+2开始的字符串长度
+	strcpy 第二个参数是字符串常量，其值是该字符串起始地址
+	将第二个参数为起始地址的字符串复制到第一个参数str+2代表的字符串中*/
+
+	//编写append()方法
+	//数组元素访问方式
+	char a1[20] = "ABCD", b1[10] = "EFG";
+	int i1, j1;
+	i1 = strlen(a1);
+	for (j1 = 0; b1[j1] != 0; i1++, j1++)
+		a1[i1] = b1[j1];
+	a1[i1] = '\0'; //!!!
+	cout << a1 << endl;
+	//字符指针访问方式
+	char a2[20] = "ABCD", b2[10] = "EFG";
+	char *pa2 = a2, *pb2 = b2;
+	while (*pa2 != '\0') pa2++; //循环结束后，pa指向a尾部的'\0'
+	while (*pb2 != '\0')
+	{
+		*pa2 = *pb2;
+		pa2++; pb2++;
+	}
+	*pa2 = '\0'; //!!!
+	pa2 = a2; //!!!
+	cout << pa2 << endl;
+
+	//字符指针做函数参数
+	//求字符串长度
+	char str2[] = "Hello!";
+	cout << *str2 << '\t';
+	cout << my_strlen(str2) << '\t';
+	cout << *str2 << endl; //形参s是函数my_strlen()内部的局部指针，即使在被调函数中s的值发生了变化，也不影响实参str的值
+
+	//比较字符串大小
+	char s1[] = "Hello!";
+	char *s2 = s1;
+	cout << my_strcmp(s1, s2) << '\t';
+	char strhi[] = "Hi";
+	char *charhi = strhi;
+	cout << my_strcmp(charhi, s2) << endl;
+
+	//字符串复制
+	char s3[20], s4[20];
+	cin >> s4;
+	copy_string1(s3, s4);
+	cout << s3 << endl;
+
+	cin >> s4;
+	copy_string2(s3, s4);
+	cout << s3 << endl;
+
+	cin >> s4;
+	copy_string3(s3, s4);
+	cout << s3 << endl;
+
+	cin >> s4;
+	copy_string4(s3, s4);
+	cout << s3 << endl;
+
+	cin >> s4;
+	copy_string5(s3, s4);
+	cout << s3 << endl;
+}
+
+//ch8_1
+#include"pch.h"
+#include<iostream>
+using namespace std;
+
+struct student
+{
+	char s_num[12]; // 1)overflow if use int type in the situation that the student number in GDUFS has 11 digits.
+	char name[20];
+	int score;
+};
+
+int main(void)
+{
+	//get the number of students
+	cout << "input the number of students >> ";
+	int num;
+	cin >> num;
+
+	//get the data of each student
+	cout << "input the number, name and score of each student in a line separately:\n";
+	student stud[500];
+	for (int i = 0; i < num; i++)
+	{
+		cin >> stud[i].s_num;
+		cin >> stud[i].name;
+		cin >> stud[i].score;
+	}
+	cout << endl;
+
+	//output the data
+	for (int i = 0; i < num; i++)
+	{
+		cout << "the number and score of " << stud[i].name << " are "
+			<< stud[i].s_num << " and " << stud[i].score << endl;
+	}
+	cout << endl;
+
+	//find the student got the highest score and output his/her data
+	student best = stud[0];
+	for (int i = 1; i < num; i++)
+	{
+		if (stud[i].score > best.score)
+			best = stud[i];
+	}
+	cout << best.name << ", whose number is " << best.s_num << ", got the highest score "
+		<< best.score << endl;
+
+	return 0;
+}
+
+//ch8_1_
+#include"pch.h"
+#include<iostream>
+using namespace std;
+
+struct date
+{
+	int year, month, day;
+};
+
+int main(void)
+{
+	//output the input prompt
+	cout << "input the date in the form of year month day>>";
+
+	//get data from the user
+	date date1;
+	cin >> date1.year >> date1.month >> date1.day;
+
+	//compute 
+	int Feb, sum = 0;
+	if ((date1.year % 4 == 0 && date1.year % 100 != 0) || (date1.year % 400 == 0))
+		Feb = 29;
+	else
+		Feb = 28;
+
+	for (int i = 1; i < date1.month; i++)
+	{
+		if (i == 1 || i == 3 || i == 5 || i == 7 || i == 8 || i == 10) 
+			sum += 31;
+		if (i == 4 || i == 6 || i == 9 || i == 11)
+			sum += 31;
+		if (i == 2)
+			sum += Feb;
+	}
+	sum += date1.day;
+
+	//output the result
+	cout << "It's the " << sum << "st/nd/rd/th day of the year"; // notice that st/nd/th should be added to represent ordinal number
+
+	return 0;
+}
+
+//ch8_2
+#include "pch.h"
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+struct location
+{
+	float x;
+	float y;
+	float z;
+};
+
+int main(void)
+{
+	//output a prompt and get the data of the first location
+	cout << "input the first location represented in the form of x y z >> ";
+	location location_1;
+	cin >> location_1.x >> location_1.y >> location_1.z;
+	cout << endl;
+
+	////output a prompt and get the data of the second location
+	cout << "input the first location represented in the form of x y z >> ";
+	location location_2;
+	cin >> location_2.x >> location_2.y >> location_2.z;
+	cout << endl;
+
+	//output the data of the two locations
+	cout << "the first location you input is:\n" 
+		<< '('
+		<< location_1.x << ", " 
+		<< location_1.y << ", "
+		<< location_1.z 
+		<< ')'
+		<< endl;
+	cout << "the second location you input is:\n" 
+		<<'('
+		<< location_2.x << ", "
+		<< location_2.y << ", "
+		<< location_2.z 
+		<< ')'
+		<< endl;
+
+	//compute the distance and output
+	cout << "the distance is: " <<
+		sqrt(pow((location_1.x - location_2.x), 2) + pow((location_1.y - location_2.y), 2) + pow((location_1.z - location_2.z), 2)) << endl;
+
+	return 0;
+}
+
+//ch8_2_
+#include"pch.h"
+#include<iostream>
+using namespace std;
+int main(void)
+{
+	//共用体 放在同一个地址开始的内存单元中 共占同一段内存
+	//定义
+	//1.
+	union data
+	{
+		short int i;
+		char c;
+		float f;
+	};
+	union data a, b, c;
+	data a1, b1, c1;
+
+	union data1
+	{
+		short int i;
+		char c;
+		float f;
+	}a2, b2, c2;
+
+	union
+	{
+		short int i;
+		char c;
+		float f;
+	}a3, b3, c3;
+
+	//共用体变量所占的内存长度是所有成员中最长的成员的长度
+
+	//引用
+	//1. 引用成员
+	a.i;
+	a.c;
+	a.f;
+
+	//2. 引用整体
+	//同类型共用体变量可以直接赋值
+	a.i = 2;
+	a.c = 'm';
+	a.f = 2;
+
+	a1 = a;
+
+	//不能把整个变量输入输出
+	//cout << a << endl;  invalid
+
+	//在某一时刻只能在同一个内存段存放其中一种而不是同时存放几种 也就是说，在一个时刻只有一个成员起作用
+	//起作用的是最后一次存放的成员
+	a.i = 10;
+	a.c = 'A';
+	a.f = 1.8;
+	//以上三个赋值执行后，只有a.f有效 cout << a.i; 可以运行，但是将a.f最低两字节解释为整数输出
+	//共用体变量起始地址和各个成员起始地址是同一地址
+	//如果在定义共用体变量时对它初始化，则只允许有一个数赋给第一个成员
+	union
+	{
+		int i;
+		char c;
+		float f;
+	}a4 = { 10 }; // a4 = {10, 'A', 1.8}invalid
+
+	union
+	{
+		int i;
+		char c[4];
+	}a5;
+	cout << "input an integer:\n";
+	cin >> a5.i;
+	cout << "the four bytes of the integer is:\n";
+	for (int k = 3; k >= 0; k--) //?????????
+		cout << (int)a5.c[k] << '\t';
+	cout << endl;
+}
+
+//ch8_3
+#include "pch.h"
+#include <iostream>
+using namespace std;
+
+enum day {Mon = 1, Tue, Wed, Thur, Fri, Sat, Sun};
+
+int main(void)
+{
+	/*
+	//output the prompt and get the data
+	cout << "What day is it today? (input in the form of integers like 1 for Mon. and 7 for Sun. >> ";
+	day day_d;
+	int day_i;
+	cin >> day_i;
+	day_d = day_i; // 7)enum variable can only be assigned by elements in the enum list!
+	*/
+
+	//assume that today is Saturday
+
+	//assume that today is Saturday and compute the day after 100 days from today
+	day day_d = Sat; // 1)day_d should be initialized
+	int d, i;// 2)define d here as it will be used out of the loop below. and i should be also defined here as d = day_d, int i = 0; is invalid
+	for (d = day_d, i = 0; i <= 100; d++, i++) // 4) i <= 100 but not <100 else d=7, i=99 will not be computed since i++ makes 99 become 100 
+		if (d % 8 == 0) // 5) d but not i. it makes no sense when d = 8, thus change it back to 1 meaning Mon.
+			d = 1;
+
+	//output the result
+	cout << "assume that today is Saturday, the day after 100 days from now is "; // 3)"assume that today is Saturday" should be printed here thus people know what day is assumed 
+	switch (--d)// 2) d but not day_d. day_d is a constant value. d changes in the loop above but day_d doesn't
+		        // 6) --d, as d++ before the condition is not established
+	{
+	case Mon: cout << "Monday"; break;
+	case Tue: cout << "Tuesday"; break;
+	case Wed: cout << "Wednesday"; break;
+	case Thur: cout << "Thursday"; break;
+	case Fri: cout << "Friday"; break;
+	case Sat: cout << "Saturday"; break;
+	case Sun: cout << "Sunday"; break;
+	}
+
+	return 0;
+}
+
+//sy7_1（版本2）
+#include"pch.h"
+#include<iostream>
+using namespace std;
+
+struct address_book
+{
+	char number[12];
+	char name[20];
+	char sex;
+	struct birth
+	{
+		int year;
+		int month;
+		int day;
+	}birthday; 
+	char home_address[100];
+	char qq[15];
+	char cell_phone_number[12];
+	char email_address[50];
+};
+
+int main(void)
+{
+	address_book a[50];
+
+	int num;
+	cout << "input the number of students >> ";
+	cin >> num;
+	cout << endl;
+
+	// sy7_1 use functions instead of inputing and outputing in the main function
+	void Input(address_book *, int); // 1)declaration address_book *. the type in declaration and function should be the same. address_book[] with address_book * is wrong
+	void Output(address_book *, int);
+	Input(a, num);
+	Output(a, num);
+
+	return 0;
+}
+
+// sy7_1 functions for input
+void Input(address_book *a, int num)
+{
+
+	for (int i = 0; i < num; i++)
+	{
+		cout << "-input the data of student " << i + 1 << "-" << endl;
+		cout << "input the number >> ";
+		cin >> a[i].number;
+
+		cout << "input the name >> ";
+		cin.ignore();
+		cin.getline(a[i].name, 20);
+
+		cout << "input the sex(M/F) >> ";
+		cin >> a[i].sex;
+
+		cout << "input the year, month and day of the birth in the form of year month day >> ";
+		cin >> a[i].birthday.year >> a[i].birthday.month >> a[i].birthday.day;
+
+		cout << "input the home address >> ";
+		cin.ignore();
+		cin.getline(a[i].home_address, 100);
+
+		cout << "input the qq number >> ";
+		cin >> a[i].qq;
+
+		cout << "input the cell phone number >> ";
+		cin >> a[i].cell_phone_number;
+
+		cout << "input the email address >> ";
+		cin >> a[i].email_address;
+		cout << endl;
+	}
+}
+
+//sy7_1 function for output
+void Output(address_book *a, int num)
+{
+	for (int i = 0; i < num; i++)
+	{
+		cout << "number: " << a[i].number << endl
+			<< "name: " << a[i].name << endl
+			<< "sex: " << a[i].sex << endl
+			<< "birth: " << a[i].birthday.year << '-'
+			<< a[i].birthday.month << '-'
+			<< a[i].birthday.day << endl
+			<< "home address: " << a[i].home_address << endl
+			<< "number: " << a[i].qq << endl
+			<< "cell phone number: " << a[i].cell_phone_number << endl
+			<< "email address: " << a[i].email_address << endl << endl;
+	}
+}
+
+//sy7_2（版本3）
+#include"pch.h"
+#include<iostream>
+#include<fstream>
+
+using namespace std;
+
+struct address_book
+{
+	char number[12];
+	char name[20];
+	char sex;
+	struct birth
+	{
+		int year;
+		int month;
+		int day;
+	}birthday; 
+	char home_address[100];
+	char qq[15];
+	char cell_phone_number[12];
+	char email_address[50];
+};
+
+int main(void)
+{
+	address_book a[50];
+
+	// sy7_2 import a file
+	fstream infile;
+	infile.open("address_book.txt", ios::in);
+	if (!infile)
+	{
+		cout << "Can not open file: " << "address_book.txt" << endl;
+		exit(1);
+	}
+
+	int num;
+	infile >> num;
+	infile.ignore(2); // 2)ignore the two <Enter>s
+
+	// sy7_2 input data
+	for (int i = 0; i < num; i++)
+	{
+		infile.getline(a[i].number, 12); // 1) infile.getline()instead of infile>>.
+
+		infile.getline(a[i].name, 20);
+
+		infile >> a[i].sex;
+
+		infile >> a[i].birthday.year >> a[i].birthday.month >> a[i].birthday.day;
+		infile.ignore(); // 2) ignore the <Enter>
+
+		infile.getline(a[i].home_address, 100);
+
+		infile.getline(a[i].qq, 15);
+
+		infile.getline(a[i].cell_phone_number, 12);
+
+		infile.getline(a[i].email_address, 50);
+
+		infile.ignore(); // 2) ignore the <Enter>
+	}
+	infile.close();// // sy7_2 close the file
+
+	for (int i = 0; i < num; i++)
+	{
+		cout << "number: " << a[i].number << endl
+			<< "name: " << a[i].name << endl
+			<< "sex: " << a[i].sex << endl
+			<< "birth: " << a[i].birthday.year << '-'
+			<< a[i].birthday.month << '-'
+			<< a[i].birthday.day << endl
+			<< "home address: " << a[i].home_address << endl
+			<< "number: " << a[i].qq << endl
+			<< "cell phone number: " << a[i].cell_phone_number << endl
+			<< "email address: " << a[i].email_address << endl << endl;
+	}
+
+	return 0;
+}
+
+//sy7_3（版本4）
+#include"pch.h"
+#include<iostream>
+using namespace std;
+
+struct address_book
+{
+	char number[12];
+	char name[20];
+	char sex;
+	struct birth
+	{
+		int year;
+		int month;
+		int day;
+	}birthday; 
+	char home_address[100];
+	char qq[15];
+	char cell_phone_number[12];
+	char email_address[50];
+};
+
+int main(void)
+{
+	address_book a[50];
+
+	int num;
+	cout << "input the number of students >> ";
+	cin >> num;
+	cout << endl;
+	for (int i = 0; i < num; i++)
+	{
+		cout << "-input the data of student " << i + 1 << "-" << endl;
+		cout << "input the number >> ";
+		cin >> a[i].number;
+
+		cout << "input the name >> ";
+		cin.ignore(); 
+		cin.getline(a[i].name, 20); 
+
+		cout << "input the sex(M/F) >> ";
+		cin >> a[i].sex;
+
+		cout << "input the year, month and day of the birth in the form of year month day >> ";
+		cin >> a[i].birthday.year >> a[i].birthday.month >> a[i].birthday.day;
+
+		cout << "input the home address >> ";
+		cin.ignore(); 
+		cin.getline(a[i].home_address, 100); 
+
+		cout << "input the qq number >> ";
+		cin >> a[i].qq;
+
+		cout << "input the cell phone number >> ";
+		cin >> a[i].cell_phone_number;
+
+		cout << "input the email address >> ";
+		cin >> a[i].email_address;
+		cout << endl;
+	}
+
+	for (int i = 0; i < num; i++)
+	{
+		cout << "number: " << a[i].number << endl
+			<< "name: " << a[i].name << endl
+			<< "sex: " << a[i].sex << endl
+			<< "birth: " << a[i].birthday.year << '-'
+			<< a[i].birthday.month << '-'
+			<< a[i].birthday.day << endl
+			<< "home address" << a[i].home_address << endl
+			<< "number: " << a[i].qq << endl
+			<< "cell phone number: " << a[i].cell_phone_number << endl
+			<< "email address: " << a[i].email_address << endl << endl;
+	}
+
+	// sy7_3 add a menu and execute functions according to the number the user input
+	int menu();
+	int menu_ = menu();
+	switch (menu_)
+	{
+	case 1:
+		cout << "the function corresponding to 1 will be executed\n";
+		break;
+	case 2:
+		cout << "the function corresponding to 2 will be executed\n";
+		break;
+	case 0:
+		return 0;
+	}
+
+	return 0;
+}
+
+int menu() // sy7_3 add a menu and execute functions according to the number the user input
+{
+	cout << "\t\t\t" << "Menu of Address Book\n\n";
+	cout << "\t\tpress 1 to do A\n\n"
+		<< "\t\tpress 2 to do B\n\n";
+	cout << "\t\tpress 0 to exit\n\n";
+	cout << "please input a number for the corresponding function >> ";
+	int num;
+	cin >> num;
+	return num;
+}
+
+//sy7_4（版本5-查询）
+#include"pch.h"
+#include<iostream>
+#include<string.h>
+using namespace std;
+
+struct address_book
+{
+	char number[12];
+	char name[20];
+	char sex;
+	struct birth
+	{
+		int year;
+		int month;
+		int day;
+	}birthday;
+	char home_address[100];
+	char qq[15];
+	char cell_phone_number[12];
+	char email_address[50];
+};
+
+int main(void)
+{
+	address_book a[50];
+
+	int num;
+	cout << "input the number of students >> ";
+	cin >> num;
+	cout << endl;
+	for (int i = 0; i < num; i++)
+	{
+		cout << "-input the data of student " << i + 1 << "-" << endl ;
+		cout << "input the number >> ";
+		cin >> a[i].number;
+
+		cout << "input the name >> ";
+		cin.ignore();
+		cin.getline(a[i].name, 20);
+
+		cout << "input the sex(M/F) >> ";
+		cin >> a[i].sex;
+
+		cout << "input the year, month and day of the birth in the form of year month day >> ";
+		cin >> a[i].birthday.year >> a[i].birthday.month >> a[i].birthday.day;
+
+		cout << "input the home address >> ";
+		cin.ignore();
+		cin.getline(a[i].home_address, 100);
+
+		cout << "input the qq number >> ";
+		cin >> a[i].qq;
+
+		cout << "input the cell phone number >> ";
+		cin >> a[i].cell_phone_number;
+
+		cout << "input the email address >> ";
+		cin >> a[i].email_address;
+		cout << endl;
+	}
+
+	for (int i = 0; i < num; i++)
+	{
+		cout << "number: " << a[i].number << endl
+			<< "name: " << a[i].name << endl
+			<< "sex: " << a[i].sex << endl
+			<< "birth: " << a[i].birthday.year << '-'
+			<< a[i].birthday.month << '-'
+			<< a[i].birthday.day << endl
+			<< "home address" << a[i].home_address << endl
+			<< "number: " << a[i].qq << endl
+			<< "cell phone number: " << a[i].cell_phone_number << endl
+			<< "email address: " << a[i].email_address << endl << endl;
+	}
+
+	int menu();
+	int menu_ = menu();
+	switch (menu_)
+	{
+	// sy7_4 add a function for searching
+	case 1: 
+		void search(address_book[], int); // 1)address_book[] to indicate that the parameter is an array, or a parameter of address_book type can not be changed into address_book array type
+		search(a, num);
+		break;
+	case 0:
+		return 0;
+	}
+
+	return 0;
+}
+
+int menu()
+{
+	cout << "\t\t\t" << "Menu of Address Book\n\n";
+	cout << "\t\tpress 1 to query student's cell phone number and email address\n" // sy7_4 a function for searching
+		<< "\t\tpress 0 to exit\n\n";
+	cout << "please input a number for the corresponding function >> ";
+	int num;
+	cin >> num;
+	return num;
+}
+
+// sy7_4 a function for searching
+void search(address_book a[], int num) // 3)address_book is its type but not int
+{
+	char name[20]; 
+	cout << "input the name of the student to be queried >> ";
+	cin.ignore(); // 4) ignore!
+	cin.getline(name, 20); // 5)cin.getline() to get names that contain white space
+	for (int i = 0; i < num; i++)
+	{
+		if (strcmp(name, a[i].name) == 0)
+		cout << "the cell phone number and email address of "
+			<< a[i].name << " is "
+			<< a[i].cell_phone_number << ", " // 2)" "here. if ',' messy code is produced
+			<< a[i].email_address << endl;
+	}
+
+}
+
+//sy7_5（版本5-模糊查询）
+#include"pch.h"
+#include<iostream>
+using namespace std;
+
+struct address_book
+{
+	char number[12];
+	char name[20];
+	char sex;
+	struct birth
+	{
+		int year;
+		int month;
+		int day;
+	}birthday;
+	char home_address[100];
+	char qq[15];
+	char cell_phone_number[12];
+	char email_address[50];
+};
+
+int main(void)
+{
+	address_book a[50];
+
+	int num;
+	cout << "input the number of students >> ";
+	cin >> num;
+	cout << endl;
+	for (int i = 0; i < num; i++)
+	{
+		cout << "-input the data of student " << i + 1 << "-" << endl;
+		cout << "input the number >> ";
+		cin >> a[i].number;
+
+		cout << "input the name >> ";
+		cin.ignore();
+		cin.getline(a[i].name, 20);
+
+		cout << "input the sex(M/F) >> ";
+		cin >> a[i].sex;
+
+		cout << "input the year, month and day of the birth in the form of year month day >> ";
+		cin >> a[i].birthday.year >> a[i].birthday.month >> a[i].birthday.day;
+
+		cout << "input the home address >> ";
+		cin.ignore();
+		cin.getline(a[i].home_address, 100);
+
+		cout << "input the qq number >> ";
+		cin >> a[i].qq;
+
+		cout << "input the cell phone number >> ";
+		cin >> a[i].cell_phone_number;
+
+		cout << "input the email address >> ";
+		cin >> a[i].email_address;
+		cout << endl;
+	}
+
+	for (int i = 0; i < num; i++)
+	{
+		cout << "number: " << a[i].number << endl
+			<< "name: " << a[i].name << endl
+			<< "sex: " << a[i].sex << endl
+			<< "birth: " << a[i].birthday.year << '-'
+			<< a[i].birthday.month << '-'
+			<< a[i].birthday.day << endl
+			<< "home address" << a[i].home_address << endl
+			<< "number: " << a[i].qq << endl
+			<< "cell phone number: " << a[i].cell_phone_number << endl
+			<< "email address: " << a[i].email_address << endl << endl;
+	}
+
+	int menu();
+	int menu_ = menu();
+	switch (menu_)
+	{
+		// sy7_5 add a function for fuzzy searching
+	case 1:
+		void fuzzy_search(address_book[], int);
+		fuzzy_search(a, num);
+	case 0:
+		return 0;
+	}
+
+	return 0;
+}
+
+int menu()
+{
+	cout << "\t\t\t" << "Menu of Address Book\n\n";
+	cout << "\t\tpress 1 use fuzzy search function\n" // sy7_5 fuzzy searching
+		<< "\t\tpress 0 to exit\n\n";
+	cout << "please input a number for the corresponding function >> ";
+	int num;
+	cin >> num;
+	return num;
+}
+
+// sy7_5 a function for fuzzy searching
+void fuzzy_search(address_book a[], int num)
+{
+	char char1[3];
+	cout << "input one character in a name >> ";
+	cin >> char1;
+	cout << endl;
+	for (int i = 0; i < num; i++)
+		for (int j = 0; j < 20; j += 2)
+			if (a[i].name[j] == char1[0])
+				if (a[i].name[j + 1] == char1[1])
+				{
+					cout << "number: " << a[i].number << endl
+						<< "name: " << a[i].name << endl
+						<< "sex: " << a[i].sex << endl
+						<< "birth: " << a[i].birthday.year << '-'
+						<< a[i].birthday.month << '-'
+						<< a[i].birthday.day << endl
+						<< "home address: " << a[i].home_address << endl
+						<< "number: " << a[i].qq << endl
+						<< "cell phone number: " << a[i].cell_phone_number << endl
+						<< "email address: " << a[i].email_address << endl << endl;
+				}
+}
+
+//sy7_6（版本6）
+#include"pch.h"
+#include<iostream>
+#include<string.h>
+using namespace std;
+
+struct address_book
+{
+	char number[12];
+	char name[20];
+	char sex;
+	struct birth
+	{
+		int year;
+		int month;
+		int day;
+	}birthday;
+	char home_address[100];
+	char qq[15];
+	char cell_phone_number[12];
+	char email_address[50];
+};
+
+int main(void)
+{
+	address_book a[50];
+
+	int num;
+	cout << "input the number of students >> ";
+	cin >> num;
+	cout << endl;
+	for (int i = 0; i < num; i++)
+	{
+		cout << "-input the data of student " << i + 1 << "-" << endl;
+		cout << "input the number >> ";
+		cin >> a[i].number;
+
+		cout << "input the name >> ";
+		cin.ignore();
+		cin.getline(a[i].name, 20);
+
+		cout << "input the sex(M/F) >> ";
+		cin >> a[i].sex;
+
+		cout << "input the year, month and day of the birth in the form of year month day >> ";
+		cin >> a[i].birthday.year >> a[i].birthday.month >> a[i].birthday.day;
+
+		cout << "input the home address >> ";
+		cin.ignore();
+		cin.getline(a[i].home_address, 100);
+
+		cout << "input the qq number >> ";
+		cin >> a[i].qq;
+
+		cout << "input the cell phone number >> ";
+		cin >> a[i].cell_phone_number;
+
+		cout << "input the email address >> ";
+		cin >> a[i].email_address;
+		cout << endl;
+	}
+
+	for (int i = 0; i < num; i++)
+	{
+		cout << "number: " << a[i].number << endl
+			<< "name: " << a[i].name << endl
+			<< "sex: " << a[i].sex << endl
+			<< "birth: " << a[i].birthday.year << '-'
+			<< a[i].birthday.month << '-'
+			<< a[i].birthday.day << endl
+			<< "home address" << a[i].home_address << endl
+			<< "number: " << a[i].qq << endl
+			<< "cell phone number: " << a[i].cell_phone_number << endl
+			<< "email address: " << a[i].email_address << endl << endl;
+	}
+
+	int menu();
+	int menu_ = menu();
+	switch (menu_)
+	{
+	// sy7_6 add a function to see if a guy with the cell phone number input by the user is in the class
+	case 1:
+		void cell_phone_number_search(address_book[], int); 
+		cell_phone_number_search(a, num);
+		break;
+	case 0:
+		return 0;
+	}
+
+	return 0;
+}
+
+int menu()
+{
+	cout << "\t\t\t" << "Menu of Address Book\n\n";
+	cout << "\t\tpress 1 to see if a person is in the class with his/her cell phone number\n"
+		<< "\t\tpress 0 to exit\n\n";
+	cout << "please input a number for the corresponding function >> ";
+	int num;
+	cin >> num;
+	return num;
+}
+
+// sy7_6 a function for checking out if a guy with the cell phone number input by the user is in the class
+void cell_phone_number_search(address_book a[], int num)
+{
+	int flag = 0;
+	char cell_phone_number[12];
+	cout << "input the cellphone number to be queried>> ";
+	cin >> cell_phone_number;
+	for (int i = 0; i <  num; i++)
+	{
+		if (strcmp(cell_phone_number, a[i].cell_phone_number) == 0)
+		{
+			flag = 1;
+			cout << a[i].name << "'s cell phone number is "
+				<< a[i].cell_phone_number << " and is a student in this class\n";
+		}
+	}
+	if (flag == 0) // 1) put it outside the loop or it may be printed many times
+		cout << "none of the students in this class has the phone number of " << cell_phone_number << endl;
+
+}
+
+//sy7_7（版本7）
+#include"pch.h"
+#include<iostream>
+#include<string.h> 
+using namespace std;
+
+struct address_book
+{
+	char number[12];
+	char name[20];
+	char sex;
+	struct birth
+	{
+		int year;
+		int month;
+		int day;
+	}birthday;
+	char home_address[100];
+	char qq[15];
+	char cell_phone_number[12];
+	char email_address[50];
+};
+
+int main(void)
+{
+	address_book a[50];
+
+	int num;
+	cout << "input the number of students >> ";
+	cin >> num;
+	cout << endl;
+	for (int i = 0; i < num; i++)
+	{
+		cout << "-input the data of student " << i + 1 << "-" << endl;
+		cout << "input the number >> ";
+		cin >> a[i].number;
+
+		cout << "input the name >> ";
+		cin.ignore();
+		cin.getline(a[i].name, 20);
+
+		cout << "input the sex(M/F) >> ";
+		cin >> a[i].sex;
+
+		cout << "input the year, month and day of the birth in the form of year month day >> ";
+		cin >> a[i].birthday.year >> a[i].birthday.month >> a[i].birthday.day;
+
+		cout << "input the home address >> ";
+		cin.ignore();
+		cin.getline(a[i].home_address, 100);
+
+		cout << "input the qq number >> ";
+		cin >> a[i].qq;
+
+		cout << "input the cell phone number >> ";
+		cin >> a[i].cell_phone_number;
+
+		cout << "input the email address >> ";
+		cin >> a[i].email_address;
+		cout << endl;
+	}
+
+	for (int i = 0; i < num; i++)
+	{
+		cout << "number: " << a[i].number << endl
+			<< "name: " << a[i].name << endl
+			<< "sex: " << a[i].sex << endl
+			<< "birth: " << a[i].birthday.year << '-'
+			<< a[i].birthday.month << '-'
+			<< a[i].birthday.day << endl
+			<< "home address" << a[i].home_address << endl
+			<< "number: " << a[i].qq << endl
+			<< "cell phone number: " << a[i].cell_phone_number << endl
+			<< "email address: " << a[i].email_address << endl << endl;
+	}
+
+	int menu();
+	int menu_ = menu();
+	switch (menu_)
+	{
+	// sy7_7 add a function for changing cell phone number
+	case 1:
+		void change(address_book[], int);
+		change(a, num);
+		break;
+	case 0:
+		return 0;
+	}
+
+	return 0;
+}
+
+int menu()
+{
+	cout << "\t\t\t" << "Menu of Address Book\n\n";
+	cout << "\t\tpress 1 to change member's cell phone number\n"
+		<< "\t\tpress 0 to exit\n\n";
+	cout << "please input a number for the corresponding function >> ";
+	int num;
+	cin >> num;
+	return num;
+}
+
+// sy7_7 a function for changing cell phone number
+void change(address_book a[], int num)
+{
+	char name[20];
+	cout << "input the name of the student whose cell phone number is to be changed >> ";
+	cin >> name;
+	for (int i = 0; i < num; i++)
+	{
+		if (strcmp(name, a[i].name) == 0)
+		{
+			cout << "input the new cell phone number >> ";
+			cin >> a[i].cell_phone_number;
+			cout << a[i].name << "'s cell phone number has been changed into " << a[i].cell_phone_number << endl;
+		}
+	}
+}
+
+//sy7_8（版本8）
+#include"pch.h"
+#include<iostream>
+#include<fstream>
+using namespace std;
+
+struct address_book
+{
+	char number[12];
+	char name[20];
+	char sex;
+	struct birth
+	{
+		int year;
+		int month;
+		int day;
+	}birthday;
+	char home_address[100];
+	char qq[15];
+	char cell_phone_number[12];
+	char email_address[50];
+};
+
+int main(void)
+{
+	address_book a[50];
+
+	int num;
+	cout << "input the number of students >> ";
+	cin >> num;
+	cout << endl;
+	for (int i = 0; i < num; i++)
+	{
+		cout << "-input the data of student " << i + 1 << "-" << endl;
+		cout << "input the number >> ";
+		cin >> a[i].number;
+
+		cout << "input the name >> ";
+		cin.ignore();
+		cin.getline(a[i].name, 20);
+
+		cout << "input the sex(M/F) >> ";
+		cin >> a[i].sex;
+
+		cout << "input the year, month and day of the birth in the form of year month day >> ";
+		cin >> a[i].birthday.year >> a[i].birthday.month >> a[i].birthday.day;
+
+		cout << "input the home address >> ";
+		cin.ignore();
+		cin.getline(a[i].home_address, 100);
+
+		cout << "input the qq number >> ";
+		cin >> a[i].qq;
+
+		cout << "input the cell phone number >> ";
+		cin >> a[i].cell_phone_number;
+
+		cout << "input the email address >> ";
+		cin >> a[i].email_address;
+		cout << endl;
+	}
+
+	// sy7_8 put the info to a document
+	ofstream out;
+	out.open("tongxunlu-new.txt");
+
+	for (int i = 0; i < num; i++) //
+	{
+		out << "number: " << a[i].number << endl
+			<< "name: " << a[i].name << endl
+			<< "sex: " << a[i].sex << endl
+			<< "birth: " << a[i].birthday.year << '-'
+			<< a[i].birthday.month << '-'
+			<< a[i].birthday.day << endl
+			<< "home address" << a[i].home_address << endl
+			<< "number: " << a[i].qq << endl
+			<< "cell phone number: " << a[i].cell_phone_number << endl
+			<< "email address: " << a[i].email_address << endl << endl;
+	}
+	out.close();
+
+	return 0;
+}
+
+//sy7_basic
+#include"pch.h"
+#include<iostream>
+using namespace std;
+
+// i.define a structure for the address book
+struct address_book
+{
+	char number[12]; 
+	char name[20];
+	char sex; 
+	struct birth
+	{
+		int year;
+		int month;
+		int day;
+	}birthday; // 1)define a value here
+	char home_address[100];
+	char qq[15];
+	char cell_phone_number[12];
+	char email_address[50];
+};
+
+int main(void)
+{
+	// ii.define an array to keep every student's data
+	address_book a[50]; 
+
+	// iii.data input
+	int num;
+	cout << "input the number of students >> ";
+	cin >> num;
+	cout << endl;
+	for (int i = 0; i < num; i++)
+	{
+		cout << "-input the data of student " << i + 1 << "-" << endl;
+		cout << "input the number >> ";
+		cin >> a[i].number;
+
+		cout << "input the name >> ";
+		cin.ignore(); // 3) use this to receive the <Enter> to avoid the cin.getline() in the next line receiving it and thus stop receiving info as cin.getline() stop receiving data when meet <Enter>
+		cin.getline(a[i].name, 20); //2 ) use getline() in case that the name contains white space
+
+		cout << "input the sex(M/F) >> ";
+		cin >> a[i].sex;
+
+		cout << "input the year, month and day of the birth in the form of year month day >> ";
+		cin >> a[i].birthday.year >> a[i].birthday.month >> a[i].birthday.day;
+
+		cout << "input the home address >> ";
+		cin.ignore(); // 3) use this to receive the <Enter> to avoid the cin.getline() in the next line receiving it and thus stop receiving info as cin.getline() stop receiving data when meet <Enter>
+		cin.getline(a[i].home_address, 100); //2 ) use getline() in case that the name contains white space
+
+		cout << "input the qq number >> ";
+		cin >> a[i].qq;
+
+		cout << "input the cell phone number >> ";
+		cin >> a[i].cell_phone_number;
+
+		cout << "input the email address >> ";
+		cin >> a[i].email_address;
+		cout << endl;
+	}
+
+	// iv.output the data
+	for (int i = 0; i < num; i++)
+	{
+		cout << "number: " << a[i].number << endl
+			<< "name: " << a[i].name << endl
+			<< "sex: " << a[i].sex << endl
+			<< "birth: " << a[i].birthday.year << '-'
+			<< a[i].birthday.month << '-'
+			<< a[i].birthday.day << endl
+			<< "home address" << a[i].home_address << endl
+			<< "number: " << a[i].qq << endl
+			<< "cell phone number: " << a[i].cell_phone_number << endl
+			<< "email address: " << a[i].email_address << endl << endl;
+	}
+
+	return 0;
+}
+
+//sy8_1
+#include"pch.h"
+#include <iostream>
+using namespace std;
+
+void max_min_value(int *array, int n, int *maxp, int *minp)
+{ 						//maxp指向主函数max变量，minp指向主函数min变量
+	int *p, *array_end;
+
+	array_end = array + n;
+	*maxp = *minp = *array;	// 假定第0个元素既是最大值又是最小值
+	for (p = array + 1; p < array_end; p++)
+	{
+		if (*p > *maxp) *maxp = *p;
+		else if (*p < *minp) *minp = *p;
+	}
+}
+int main(void)
+{
+	int i, number[10], *p = number, max, min;
+
+	for (i = 0; i < 10; i++)
+		cin >> *(p + i);			// 输入数组元素值
+	max_min_value(p, 10, &max, &min);
+	for (i = 0; i < 10; i++)
+		cout << *(p + i) << '\t';	// 输出数组元素值
+	cout << "max value = " << max << ", min value = " << min << endl;
+	return 0;
+}
+
+//sy8_3
+#include "pch.h"
+#include <iostream>
+using namespace std;
+
+enum day {Mon = 1, Tue, Wed, Thur, Fri, Sat, Sun};
+
+int main(void)
+{
+	/*
+	//output the prompt and get the data
+	cout << "What day is it today? (input in the form of integers like 1 for Mon. and 7 for Sun. >> ";
+	day day_d;
+	int day_i;
+	cin >> day_i;
+	day_d = day_i; // 7)enum variable can only be assigned by elements in the enum list!
+	*/
+
+	//assume that today is Saturday
+
+	//assume that today is Saturday and compute the day after 100 days from today
+	day day_d = Sat; // 1)day_d should be initialized
+	int d, i;// 2)define d here as it will be used out of the loop below. and i should be also defined here as d = day_d, int i = 0; is invalid
+	for (d = day_d, i = 0; i <= 100; d++, i++) // 4) i <= 100 but not <100 else d=7, i=99 will not be computed since i++ makes 99 become 100 
+		if (d % 8 == 0) // 5) d but not i. it makes no sense when d = 8, thus change it back to 1 meaning Mon.
+			d = 1;
+
+	//output the result
+	cout << "assume that today is Saturday, the day after 100 days from now is "; // 3)"assume that today is Saturday" should be printed here thus people know what day is assumed 
+	switch (--d)// 2) d but not day_d. day_d is a constant value. d changes in the loop above but day_d doesn't
+		        // 6) --d, as d++ before the condition is not established
+	{
+	case Mon: cout << "Monday"; break;
+	case Tue: cout << "Tuesday"; break;
+	case Wed: cout << "Wednesday"; break;
+	case Thur: cout << "Thursday"; break;
+	case Fri: cout << "Friday"; break;
+	case Sat: cout << "Saturday"; break;
+	case Sun: cout << "Sunday"; break;
+	}
+
+	return 0;
+}
